@@ -53,7 +53,7 @@ class TelegramBotWebhookHandler
                 $message = $update['message'];
                 $chat_id = $message['chat']['id'];
                 $user_id = $message['from']['id'];
-                $username = $message['from']['username'] ?? null;
+                $username = $message['from']['username'] ?? 'anonymous';
                 $text = $message['text'];
 
                 $bot_id = $this->telegram->getMe()->getId();
@@ -61,11 +61,12 @@ class TelegramBotWebhookHandler
                     $this->chatHistory->addMessage($chat_id, $user_id, $username, $text);
 
                     if (
-                        (isset($message['entities']) &&
-                        in_array('mention', array_column($message['entities'], 'type'))) ||
+                        (
+                            isset($message['entities']) &&
+                            in_array('mention', array_column($message['entities'], 'type'))
+                        ) ||
                         str_contains($text, 'Марвін') ||
                         str_contains($text, 'Marvin')
-
                     ) {
 
                         $delay = rand(1, 5);
