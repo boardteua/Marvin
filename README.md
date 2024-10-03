@@ -22,20 +22,6 @@ TELEGRAM_WEBHOOK_URL = https://some.url/cat/webhook.php
 OPENAI_API_KEY =
 ```
 
-### Configuration Details
-
-- **DB_CONNECTION**: The type of database connection (e.g., `mysql`)
-- **DB_HOST**: The hostname for the database (e.g., `localhost`)
-- **DB_PORT**: The port for the database (e.g., `3306`)
-- **DB_DATABASE**: The name of the database (e.g., `cat_bot`)
-- **DB_USERNAME**: The username for accessing the database
-- **DB_PASSWORD**: The password for accessing the database
-- **PROMPT_CONF**: The prompt configuration for the GPT-4 bot. It is set to respond in a light sarcastic manner,
-  imitating Marvin the Paranoid Android.
-- **TELEGRAM_BOT_TOKEN**: Your Telegram Bot token
-- **TELEGRAM_WEBHOOK_URL**: The webhook URL for your Telegram bot (e.g., `https://some.url/cat/webhook.php`)
-- **OPENAI_API_KEY**: Your OpenAI API key
-
 ## How to Use
 
 1. Clone the repository:
