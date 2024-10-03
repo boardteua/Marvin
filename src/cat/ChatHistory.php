@@ -10,6 +10,22 @@ use cat\ChatMessage as ChatMessage;
 class ChatHistory
 {
     /**
+     * Retrieves the last interaction for a user in a chat.
+     *
+     * @param int $chatId The ID of the chat.
+     * @param int $userId The ID of the user.
+     * @return array|null
+     */
+    public function getLastInteraction(int $chatId, int $userId): ?array
+    {
+        $message = ChatMessage::where('chat_id', $chatId)
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return $message ? $message->toArray() : null;
+    }
+    /**
      * Adds a message to the chat if it does not already exist.
      *
      * @param int $chatId The ID of the chat to which the message should be added.

@@ -1,4 +1,5 @@
 <?php
+
 namespace cat;
 
 require 'vendor/autoload.php';
@@ -46,7 +47,6 @@ class TelegramBotWebhookHandler
     public function handleUpdate(): void
     {
         try {
-            // Отримання апдейту з Telegram
             $update = json_decode(file_get_contents('php://input'), true);
 
             if (isset($update['message'])) {
@@ -55,10 +55,18 @@ class TelegramBotWebhookHandler
                 $user_id = $message['from']['id'];
                 $username = $message['from']['username'] ?? 'anonymous';
                 $text = $message['text'];
+                $reply_to_message = $message['reply_to_message'] ?? null;
 
                 $bot_id = $this->telegram->getMe()->getId();
                 if ($user_id !== $bot_id) {
+
+                    if ($reply_to_message) {
+                        $replyText = $reply_to_message['text'] ?? '';
+                        $text = "Відповідь на: " . $replyText . "\n" . $text;
+                    }
+
                     $this->chatHistory->addMessage($chat_id, $user_id, $username, $text);
+                    $lastInteraction = $this->chatHistory->getLastInteraction($chat_id, $user_id);
 
                     if (
                         (
@@ -66,9 +74,10 @@ class TelegramBotWebhookHandler
                             in_array('mention', array_column($message['entities'], 'type'))
                         ) ||
                         str_contains($text, 'Марвін') ||
-                        str_contains($text, 'Marvin')
+                        str_contains($text, 'Marvin') ||
+                        ($lastInteraction && (time() - strtotime($lastInteraction['created_at'])) < 600) ||
+                        ($reply_to_message && $reply_to_message['from']['id'] == $bot_id)
                     ) {
-
                         $delay = rand(1, 5);
                         sleep($delay);
 
@@ -80,7 +89,6 @@ class TelegramBotWebhookHandler
 
                         $this->chatHistory->addMessage($chat_id, $user_id, 'assistant', $response);
                     }
-
                 }
             }
         } catch (TelegramResponseException $e) {
@@ -143,4 +151,6 @@ class TelegramBotWebhookHandler
             return 'Не вдалось отримати відповідь від GPT';
         }
     }
+
+
 }
