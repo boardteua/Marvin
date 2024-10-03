@@ -60,7 +60,13 @@ class TelegramBotWebhookHandler
                 if ($user_id !== $bot_id) {
                     $this->chatHistory->addMessage($chat_id, $user_id, $username, $text);
 
-                    if (isset($message['entities']) && in_array('mention', array_column($message['entities'], 'type'))) {
+                    if (
+                        (isset($message['entities']) &&
+                        in_array('mention', array_column($message['entities'], 'type'))) ||
+                        str_contains($text, 'Марвін') ||
+                        str_contains($text, 'Marvin')
+
+                    ) {
 
                         $delay = rand(1, 5);
                         sleep($delay);
